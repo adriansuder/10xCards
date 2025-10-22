@@ -148,7 +148,7 @@ Następujące funkcje celowo nie wchodzą w zakres MVP, aby umożliwić szybkie 
 
 ## 6. Metryki sukcesu
 - 6.1. Jakość generowania AI (Cel: >75%):
-  - Mierzone jako stosunek liczby fiszek zaakceptowanych (nieodrzuconych i nieedytowanych) do całkowitej liczby fiszek wygenerowanych przez AI.
+  - Mierzone jako stosunek liczby fiszek zaakceptowanych (nieodrzuconych) do całkowitej liczby fiszek wygenerowanych przez AI.
   - `SUM(ai_proposal_accepted) / SUM(ai_proposal_generated) > 0.75`
 - 6.2. Adopcja funkcji AI (Cel: >50% aktywnych użytkowników):
   - Mierzone jako procent aktywnych użytkowników (zalogowanych w ciągu ostatnich 14 dni), którzy wygenerowali i zapisali co najmniej jedną fiszkę przy użyciu AI.
