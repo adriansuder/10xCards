@@ -1,0 +1,295 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "10xCards - Update Profile Tests",
+  "collectionId": "update-profile-tests",
+  "dateExported": "2025-10-23",
+  "version": "1.0",
+  "folders": [
+    {
+      "id": "happy-path",
+      "name": "✅ Happy Path Tests",
+      "requests": []
+    },
+    {
+      "id": "error-tests",
+      "name": "❌ Error Tests",
+      "requests": []
+    }
+  ],
+  "requests": [
+    {
+      "id": "1",
+      "name": "Update default_ai_level to c1",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 10,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": \"c1\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.default_ai_level",
+          "value": "c1"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "2",
+      "name": "Update default_ai_level to b1",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 20,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": \"b1\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.default_ai_level",
+          "value": "b1"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "3",
+      "name": "Update default_ai_level to a2",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 30,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": \"a2\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.default_ai_level",
+          "value": "a2"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "4",
+      "name": "❌ Missing Authorization Token",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 100,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": \"c1\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "401"
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "5",
+      "name": "❌ Invalid JSON Format",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 110,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{invalid json}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "400"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Invalid JSON format in request body."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "6",
+      "name": "❌ Missing default_ai_level Field",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 120,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "422"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Validation failed."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "7",
+      "name": "❌ Invalid Language Level",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 130,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": \"invalid_level\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "422"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Validation failed."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "8",
+      "name": "❌ Wrong Data Type for default_ai_level",
+      "url": "{{baseUrl}}/api/profile",
+      "method": "PATCH",
+      "sortNum": 140,
+      "created": "2025-10-23T14:00:00.000Z",
+      "modified": "2025-10-23T14:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"default_ai_level\": 123\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "422"
+        }
+      ],
+      "folderId": "error-tests"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "client": "Thunder Client",
+  "environmentName": "10xCards - Local Development",
+  "dateExported": "2025-10-23",
+  "version": "1.0",
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:4321",
+      "description": "Base URL for the local Astro development server"
+    },
+    {
+      "name": "token",
+      "value": "YOUR_JWT_TOKEN_HERE",
+      "description": "JWT token obtained from Supabase authentication. Get it from browser cookies/localStorage after login."
+    },
+    {
+      "name": "flashcardId",
+      "value": "YOUR_FLASHCARD_UUID_HERE",
+      "description": "UUID of an existing flashcard to test with. Get it from GET /api/flashcards endpoint."
+    }
+  ]
+}

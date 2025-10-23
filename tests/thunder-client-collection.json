@@ -1,0 +1,335 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "10xCards - Update Flashcard Tests",
+  "collectionId": "update-flashcard-tests",
+  "dateExported": "2025-10-23",
+  "version": "1.0",
+  "folders": [
+    {
+      "id": "happy-path",
+      "name": "✅ Happy Path Tests",
+      "requests": []
+    },
+    {
+      "id": "error-tests",
+      "name": "❌ Error Tests",
+      "requests": []
+    }
+  ],
+  "requests": [
+    {
+      "id": "1",
+      "name": "Update Front Only",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 10,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"Updated front text\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.front",
+          "value": "Updated front text"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "2",
+      "name": "Update Multiple Fields",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 20,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"New front\",\n  \"back\": \"New back\",\n  \"part_of_speech\": \"verb\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "3",
+      "name": "Set Part of Speech to Null",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 30,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"part_of_speech\": null\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "200"
+        }
+      ],
+      "folderId": "happy-path"
+    },
+    {
+      "id": "4",
+      "name": "401 - No Authorization",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 40,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"Updated text\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "401"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Unauthorized"
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "5",
+      "name": "400 - Invalid UUID",
+      "url": "{{baseUrl}}/api/flashcards/invalid-uuid",
+      "method": "PATCH",
+      "sortNum": 50,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"Updated text\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "400"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Invalid flashcard ID."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "6",
+      "name": "400 - Empty Body",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 60,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "400"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Request body cannot be empty. Provide at least one field to update."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "7",
+      "name": "404 - Flashcard Not Found",
+      "url": "{{baseUrl}}/api/flashcards/00000000-0000-0000-0000-000000000000",
+      "method": "PATCH",
+      "sortNum": 70,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"Updated text\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "404"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Flashcard not found or access denied."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "8",
+      "name": "422 - Empty Front Field",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 80,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "422"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Invalid request data."
+        }
+      ],
+      "folderId": "error-tests"
+    },
+    {
+      "id": "9",
+      "name": "422 - Front Too Long (>249 chars)",
+      "url": "{{baseUrl}}/api/flashcards/{{flashcardId}}",
+      "method": "PATCH",
+      "sortNum": 90,
+      "created": "2025-10-23T12:00:00.000Z",
+      "modified": "2025-10-23T12:00:00.000Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"front\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "res-code",
+          "value": "422"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.message",
+          "value": "Invalid request data."
+        }
+      ],
+      "folderId": "error-tests"
+    }
+  ],
+  "settings": {
+    "headers": [],
+    "tests": []
+  }
+}
