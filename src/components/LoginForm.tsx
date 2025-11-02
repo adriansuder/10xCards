@@ -31,27 +31,7 @@ const LoginForm: React.FC = React.memo(() => {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<LoginError | null>(null);
-  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(true);
-
-  useEffect(() => {
-    // Check if user is already logged in
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session) {
-          // User is already logged in, redirect to home
-          window.location.href = '/';
-          return;
-        }
-      } catch (err) {
-        console.error('Error checking session:', err);
-      } finally {
-        setIsCheckingSession(false);
-      }
-    };
-
-    checkSession();
-  }, []);
+  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(false);
 
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
@@ -145,19 +125,6 @@ const LoginForm: React.FC = React.memo(() => {
       setIsLoading(false);
     }
   };
-
-  if (isCheckingSession) {
-    return (
-      <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="flex items-center justify-center py-12">
-          <div className="flex items-center space-x-2 text-gray-600">
-            <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <span>Sprawdzanie sesji...</span>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm" role="main" aria-labelledby="login-title">

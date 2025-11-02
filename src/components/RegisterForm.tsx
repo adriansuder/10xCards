@@ -30,33 +30,10 @@ const RegisterForm: React.FC = React.memo(() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Session checking state
-  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(true);
+  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(false);
 
   // Password visibility toggle
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  /**
-   * Check if user is already logged in on component mount
-   * If session exists, redirect to home page
-   */
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session) {
-          // User is already logged in, redirect to home
-          window.location.href = '/';
-          return;
-        }
-      } catch (err) {
-        console.error('Error checking session:', err);
-      } finally {
-        setIsCheckingSession(false);
-      }
-    };
-
-    checkSession();
-  }, []);
 
   /**
    * Validates a single form field
@@ -203,23 +180,6 @@ const RegisterForm: React.FC = React.memo(() => {
       setIsLoading(false);
     }
   };
-
-  // Show loading state while checking session
-  if (isCheckingSession) {
-    return (
-      <>
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-          <CardContent className="flex items-center justify-center py-12">
-            <div className="flex items-center space-x-2 text-gray-600">
-              <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-              <span>Sprawdzanie sesji...</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Toaster />
-      </>
-    );
-  }
 
   return (
     <>
