@@ -1,0 +1,30 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { FlashcardTable } from '../components/flashcards/FlashcardTable';
+
+// Check authentication
+// @ts-ignore - Astro types not properly merged
+const user = Astro.locals.user;
+
+if (!user) {
+  return Astro.redirect('/logowanie');
+}
+
+const title = 'Moje Fiszki - 10xCards';
+const description = 'Przeglądaj, edytuj i zarządzaj swoimi fiszkami do nauki języków';
+---
+
+<MainLayout title={title} description={description}>
+  <div class="max-w-7xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight mb-2">Moje Fiszki</h1>
+      <p class="text-muted-foreground">
+        Przeglądaj i zarządzaj swoją kolekcją fiszek. Kliknij na tekst, aby edytować.
+      </p>
+    </div>
+
+    <!-- Flashcard Table -->
+    <FlashcardTable client:load />
+  </div>
+</MainLayout>

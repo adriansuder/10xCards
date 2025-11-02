@@ -1,0 +1,65 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SettingsForm from '../components/SettingsForm';
+import type { UserProfileDto } from '../types';
+
+export const prerender = false;
+
+// Auth check - redirect to login if not authenticated
+// @ts-ignore - Astro types not properly merged
+const { user } = Astro.locals;
+
+if (!user) {
+  return Astro.redirect('/logowanie');
+}
+
+// Fetch user profile from API
+let profile: UserProfileDto | null = null;
+let error: string | null = null;
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/profile`, {
+    headers: {
+      'Cookie': Astro.request.headers.get('Cookie') || '',
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      return Astro.redirect('/logowanie');
+    }
+    if (response.status === 404) {
+      error = 'Nie znaleziono profilu użytkownika.';
+    } else {
+      error = 'Wystąpił błąd podczas pobierania profilu.';
+    }
+  } else {
+    profile = await response.json();
+  }
+} catch (err) {
+  console.error('Error fetching profile:', err);
+  error = 'Wystąpił błąd podczas pobierania profilu.';
+}
+---
+
+<MainLayout title="Ustawienia - 10xCards" description="Zarządzaj ustawieniami swojego profilu w aplikacji 10xCards">
+  <div class="max-w-2xl mx-auto px-4 sm:px-0">
+    <div class="mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Ustawienia</h1>
+      <p class="text-sm sm:text-base text-gray-600">Zarządzaj ustawieniami swojego profilu</p>
+    </div>
+
+    {error ? (
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg" role="alert">
+        <p class="font-medium">Błąd</p>
+        <p class="text-sm">{error}</p>
+      </div>
+    ) : profile ? (
+      <SettingsForm client:load initialProfile={profile} />
+    ) : (
+      <div class="bg-gray-50 border border-gray-200 px-4 py-3 rounded-lg">
+        <p class="text-gray-600">Ładowanie ustawień...</p>
+      </div>
+    )}
+  </div>
+</MainLayout>

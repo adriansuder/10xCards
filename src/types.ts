@@ -195,3 +195,156 @@ export type UpdateProfileCommand = {
   userId: string;
   default_ai_level: LanguageLevel;
 };
+
+// --- Authentication Types ---
+
+/**
+ * Form data for user registration.
+ * Represents the structure of data collected in the registration form.
+ */
+export type RegisterFormData = {
+  email: string;
+  password: string;
+};
+
+/**
+ * Validation errors for registration form fields.
+ * Maps field names to their corresponding error messages.
+ */
+export type RegisterFormErrors = {
+  email?: string;
+  password?: string;
+};
+
+/**
+ * Complete state of the registration form component.
+ * Manages form data, validation errors, loading state, and general errors.
+ */
+export type RegisterFormState = {
+  formData: RegisterFormData;
+  errors: RegisterFormErrors;
+  isLoading: boolean;
+  generalError: string | null;
+};
+
+// --- Flashcard View ViewModel Types ---
+
+/**
+ * ViewModel for the FlashcardTable component state.
+ * Manages the list of flashcards, pagination, loading and error states.
+ */
+export type FlashcardTableViewModel = {
+  flashcards: FlashcardListItemDto[];
+  pagination: PaginationDto;
+  isLoading: boolean;
+  error: string | null;
+};
+
+/**
+ * Props for the FlashcardRow component.
+ * Represents a single row in the flashcards table.
+ */
+export interface FlashcardRowProps {
+  flashcard: FlashcardListItemDto;
+  onUpdate: (id: string, data: UpdateFlashcardCommand) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
+}
+
+/**
+ * Props for the EditableCell component.
+ * Manages inline editing of flashcard fields.
+ */
+export interface EditableCellProps {
+  value: string | null;
+  fieldName: keyof UpdateFlashcardCommand;
+  onSave: (value: string) => Promise<void>;
+  isEditable?: boolean;
+}
+
+/**
+ * Local state for the EditableCell component.
+ * Tracks editing mode, current value, validation errors and saving state.
+ */
+export interface EditableCellState {
+  isEditing: boolean;
+  currentValue: string;
+  error: string | null;
+  isSaving: boolean;
+}
+
+/**
+ * Props for the ActionCell component.
+ * Contains action buttons for each flashcard row.
+ */
+export interface ActionCellProps {
+  flashcardId: string;
+  onDelete: (id: string) => Promise<void>;
+}
+
+/**
+ * Props for the DeleteButton component.
+ * Handles flashcard deletion with confirmation dialog.
+ */
+export interface DeleteButtonProps {
+  flashcardId: string;
+  onDelete: (id: string) => Promise<void>;
+  isDeleting?: boolean;
+}
+
+/**
+ * Props for the Pagination component.
+ * Controls page navigation in the flashcard list.
+ */
+export interface PaginationProps {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+/**
+ * Query parameters for flashcard list pagination and sorting.
+ */
+export interface FlashcardListQueryParams {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+}
+
+// --- Home View ViewModel Types ---
+
+/**
+ * ViewModel for AI suggestion with editing state.
+ * Extends AiSuggestion with temporary editing fields to manage inline editing
+ * without mutating the original suggestion data.
+ */
+export interface AiSuggestionViewModel extends AiSuggestion {
+  isEditing: boolean;
+  tempFront: string;
+  tempBack: string;
+  tempPartOfSpeech: string | null;
+}
+
+/**
+ * ViewModel for the manual flashcard creation form.
+ * Manages form state and submission status.
+ */
+export interface ManualFormViewModel {
+  front: string;
+  back: string;
+  part_of_speech: string | null;
+  isSubmitting: boolean;
+}
+
+/**
+ * State for AI generation functionality.
+ * Manages suggestions list, loading state, and error handling.
+ */
+export interface AiGenerationState {
+  suggestions: AiSuggestionViewModel[];
+  isGenerating: boolean;
+  isImporting: boolean;
+  error: string | null;
+}

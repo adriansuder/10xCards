@@ -1,0 +1,22 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { ReviewSessionContainer } from '../components/review/ReviewSessionContainer';
+
+// This page requires authentication - middleware will handle redirect if not authenticated
+export const prerender = false;
+---
+
+<MainLayout title="Sesja Nauki - AI Fiszki">
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
+        Sesja Nauki
+      </h1>
+      <p class="mt-2 text-muted-foreground">
+        Powtórz swoje fiszki według metody Leitnera
+      </p>
+    </div>
+
+    <ReviewSessionContainer client:load />
+  </div>
+</MainLayout>

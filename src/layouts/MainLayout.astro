@@ -1,0 +1,63 @@
+---
+import '../styles/globals.css';
+import { Toaster } from '../components/ui/sonner';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = '10xCards - Nauka języków z fiszkami',
+  description = 'Aplikacja do nauki języków z wykorzystaniem fiszek i algorytmu Leitnera'
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="min-h-screen bg-background">
+      <header class="border-b">
+        <div class="container mx-auto px-4 py-4">
+          <nav class="flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold text-primary">10xCards</a>
+            <div class="flex gap-4">
+              <a href="/" class="text-sm font-medium hover:text-primary transition-colors">
+                Utwórz fiszki
+              </a>
+              <a href="/moje-fiszki" class="text-sm font-medium hover:text-primary transition-colors">
+                Moje Fiszki
+              </a>
+              <a href="/ucz-sie" class="text-sm font-medium hover:text-primary transition-colors">
+                Ucz się
+              </a>
+              <a href="/ustawienia" class="text-sm font-medium hover:text-primary transition-colors">
+                Ustawienia
+              </a>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <main class="container mx-auto px-4 py-8">
+        <slot />
+      </main>
+
+      <footer class="border-t mt-auto">
+        <div class="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} 10xCards. Wszystkie prawa zastrzeżone.</p>
+        </div>
+      </footer>
+    </div>
+    
+    <Toaster client:load />
+  </body>
+</html>

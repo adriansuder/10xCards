@@ -1,0 +1,18 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { HomePage } from '../components/home/HomePage';
+import { Toaster } from '../components/ui/sonner';
+
+// Auth check - redirect to login if not authenticated
+// @ts-ignore - Astro types not properly merged
+const user = Astro.locals.user;
+
+if (!user) {
+  return Astro.redirect('/logowanie');
+}
+---
+
+<MainLayout title="Utwórz fiszki - 10xCards">
+  <HomePage client:load />
+  <Toaster client:only="react" />
+</MainLayout>

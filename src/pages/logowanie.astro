@@ -1,0 +1,35 @@
+---
+import LoginForm from '../components/LoginForm';
+
+export const prerender = false;
+---
+
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Logowanie - 10xCards</title>
+    <meta name="description" content="Zaloguj się do swojego konta w aplikacji 10xCards, aby kontynuować naukę fiszek językowych." />
+  </head>
+  <body>
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">10xCards</h1>
+          <h2 class="text-xl sm:text-2xl font-semibold text-gray-700">
+            Zaloguj się do swojego konta
+          </h2>
+          <p class="mt-2 text-sm text-gray-600">
+            Lub{' '}
+            <a href="/rejestracja" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded">
+              zarejestruj nowe konto
+            </a>
+          </p>
+        </div>
+        <LoginForm client:load />
+      </div>
+    </div>
+  </body>
+</html>
