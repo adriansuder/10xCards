@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { supabaseClient } from '../db/supabase.client';
-import { mapSupabaseError } from '../lib/auth';
 import type { RegisterFormData, RegisterFormErrors } from '../types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -13,7 +11,7 @@ import { Toaster } from './ui/sonner';
  * RegisterForm Component
  * 
  * A fully interactive React component that handles user registration.
- * Manages form state, validation, API communication with Supabase Auth,
+ * Manages form state, validation, API communication via server-side endpoint,
  * and provides user feedback through toast notifications.
  */
 const RegisterForm: React.FC = React.memo(() => {
@@ -28,9 +26,6 @@ const RegisterForm: React.FC = React.memo(() => {
 
   // Loading state during registration
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Session checking state
-  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(false);
 
   // Password visibility toggle
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -136,10 +131,15 @@ const RegisterForm: React.FC = React.memo(() => {
 
   /**
    * Handles form submission
-   * Validates form, calls Supabase Auth API, and handles the response
+   * Calls the server-side registration API endpoint
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    // Prevent duplicate submissions
+    if (isLoading) {
+      return;
+    }
 
     // Validate form before submission
     if (!validateForm()) {
@@ -149,31 +149,66 @@ const RegisterForm: React.FC = React.memo(() => {
     setIsLoading(true);
 
     try {
-      const { data, error: authError } = await supabaseClient.auth.signUp({
-        email: formData.email,
-        password: formData.password
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
-      if (authError) {
-        throw authError;
+      const result = await response.json();
+
+      if (!response.ok) {
+        // Handle validation errors (422)
+        if (response.status === 422 && result.errors) {
+          const fieldErrors: RegisterFormErrors = {};
+          result.errors.forEach((err: { field: string; message: string }) => {
+            fieldErrors[err.field as keyof RegisterFormErrors] = err.message;
+          });
+          setErrors(fieldErrors);
+          toast.error('Błąd walidacji', {
+            description: 'Sprawdź poprawność wprowadzonych danych',
+            duration: 4000,
+          });
+          return;
+        }
+
+        // Handle other errors
+        throw new Error(result.message || 'Wystąpił błąd podczas rejestracji');
       }
 
-      // Success - show success toast
-      toast.success('Konto zostało utworzone pomyślnie!', {
-        description: 'Za chwilę zostaniesz przekierowany...',
-        duration: 3000,
-      });
+      // Check if email confirmation is required
+      if (result.requiresEmailConfirmation) {
+        // Email confirmation is enabled - show info message
+        toast.success('Konto zostało utworzone!', {
+          description: 'Sprawdź swoją skrzynkę email i kliknij w link potwierdzający, aby aktywować konto.',
+          duration: 8000,
+        });
+        
+        // Don't redirect - user needs to confirm email first
+        // Clear form
+        setFormData({ email: '', password: '' });
+      } else {
+        // Email confirmation is disabled - user is automatically logged in
+        toast.success('Konto zostało utworzone pomyślnie!', {
+          description: 'Za chwilę zostaniesz przekierowany...',
+          duration: 3000,
+        });
 
-      // Redirect to home page after short delay
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
+        // Redirect to home page after short delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      }
 
     } catch (err: any) {
       // Handle registration error
-      const errorMessage = mapSupabaseError(err);
       toast.error('Błąd rejestracji', {
-        description: errorMessage,
+        description: err.message || 'Nie udało się utworzyć konta. Spróbuj ponownie.',
         duration: 5000,
       });
     } finally {

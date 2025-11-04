@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '../../db/supabase.client';
 import type {
   CreateFlashcardCommand,
   CreatedFlashcardDto,
@@ -9,7 +9,6 @@ import type {
   ListFlashcardsResponseDto,
   UpdateFlashcardCommand,
 } from '../../types';
-import type { Database } from '../../db/database.types';
 
 export type GetFlashcardsOptions = {
   page: number;
@@ -20,7 +19,7 @@ export type GetFlashcardsOptions = {
 
 export const flashcardService = {
   async getFlashcards(
-    supabase: SupabaseClient<Database>,
+    supabase: SupabaseClient,
     userId: string,
     options: GetFlashcardsOptions
   ): Promise<ListFlashcardsResponseDto> {
@@ -64,7 +63,7 @@ export const flashcardService = {
   },
 
   async createFlashcard(
-    supabase: SupabaseClient<Database>,
+    supabase: SupabaseClient,
     userId: string,
     data: CreateFlashcardCommand
   ): Promise<CreatedFlashcardDto> {
@@ -92,7 +91,7 @@ export const flashcardService = {
   },
 
   async getFlashcardById(
-    supabase: SupabaseClient<Database>,
+    supabase: SupabaseClient,
     flashcardId: string
   ): Promise<FlashcardDetailDto | null> {
     const { data, error } = await supabase.from('flashcards').select('*').eq('id', flashcardId).single();
@@ -106,19 +105,20 @@ export const flashcardService = {
   },
 
   async importAiFlashcards(
-    supabase: SupabaseClient<Database>,
+    supabase: SupabaseClient,
     userId: string,
     command: ImportFlashcardsCommand,
     languageLevel: string
   ): Promise<ImportFlashcardsResponseDto> {
     const { flashcards, metrics } = command;
 
-    // @ts-expect-error - This is a temporary workaround until Supabase types are regenerated.
+    // Call the import_ai_flashcards RPC function
+    // @ts-expect-error - This RPC function exists but is not yet in the generated types
     const { data, error } = await supabase.rpc('import_ai_flashcards', {
       flashcards_data: flashcards,
+      language_level_input: languageLevel,
       metrics_data: metrics,
       user_id_input: userId,
-      language_level_input: languageLevel,
     });
 
     if (error) {
@@ -141,7 +141,7 @@ export const flashcardService = {
    * @throws Error if database operation fails
    */
   async updateFlashcard(
-    supabase: SupabaseClient<Database>,
+    supabase: SupabaseClient,
     flashcardId: string,
     userId: string,
     data: UpdateFlashcardCommand

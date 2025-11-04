@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { supabaseClient } from '../db/supabase.client';
+import React, { useState } from 'react';
 import { mapSupabaseError } from '../lib/auth';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -31,7 +30,6 @@ const LoginForm: React.FC = React.memo(() => {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<LoginError | null>(null);
-  const [isCheckingSession, setIsCheckingSession] = useState<boolean>(false);
 
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
@@ -105,21 +103,31 @@ const LoginForm: React.FC = React.memo(() => {
     setError(null);
 
     try {
-      const { data, error: authError } = await supabaseClient.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password
+      // Call our backend API endpoint instead of Supabase directly
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
-      if (authError) {
-        throw authError;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Wystąpił błąd podczas logowania.');
       }
 
       // Success - redirect to home page
+      // Server has already set the cookies, so just redirect
       window.location.href = '/';
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       setError({
-        message: mapSupabaseError(err),
-        code: err.code
+        message: error.message || 'Wystąpił błąd podczas logowania.',
       });
     } finally {
       setIsLoading(false);

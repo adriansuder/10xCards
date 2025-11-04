@@ -998,7 +998,7 @@ const response = await fetch(`/api/flashcards/${flashcardId}`, {
    ```typescript
    const { session } = context.locals;
    if (!session?.user) {
-     return context.redirect('/login');
+     return context.redirect('/logowanie');
    }
    ```
 3. Dodaj layout aplikacji

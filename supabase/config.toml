@@ -172,8 +172,13 @@ enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# IMPORTANT: If enabled, users need to confirm their email address before signing in.
+# Currently set to FALSE - users are automatically logged in after registration.
+# To enable email confirmation:
+# 1. Set enable_confirmations = true
+# 2. Configure SMTP in [auth.email.smtp] section below
+# 3. The app will automatically detect this and show appropriate messages
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
@@ -188,10 +193,10 @@ otp_expiry = 3600
 # enabled = true
 # host = "smtp.sendgrid.net"
 # port = 587
-# user = "apikey"
+# user = "c0f1cc42dc86dc1d852efba7ee86e684"
 # pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# admin_email = "siwcio3@gmail.com"
+# sender_name = "10xCards Registration"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

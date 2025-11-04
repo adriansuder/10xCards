@@ -7,8 +7,9 @@
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.76.1",
-    "astro": "^5.14.8",
+    "astro": "^5.15.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.552.0",
@@ -18,9 +19,13 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.18",
     "typescript": "^5.9.3",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
   },
   "scripts": {
     "dev": "astro dev"
+  },
+  "devDependencies": {
+    "@astrojs/ts-plugin": "^1.10.5"
   }
 }

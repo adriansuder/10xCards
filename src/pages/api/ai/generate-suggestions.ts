@@ -8,7 +8,7 @@ const GenerateSuggestionsPayloadSchema = z.object({
     .string()
     .min(1, 'Text cannot be empty.')
     .max(2000, 'Text cannot exceed 2000 characters.'),
-  level: z.enum(['b1', 'b2', 'c1'], { message: 'Invalid language level.' }),
+  level: z.enum(['a1','a2','b1', 'b2', 'c1','c2'], { message: 'Invalid language level.' }),
 });
 
 export const POST: APIRoute = async (context) => {

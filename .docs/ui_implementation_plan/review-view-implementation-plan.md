@@ -680,7 +680,7 @@ const [error, setError] = useState<SessionError | null>(null);
    ```typescript
    const { user } = Astro.locals;
    if (!user) {
-     return Astro.redirect('/login');
+     return Astro.redirect('/logowanie');
    }
    ```
 3. Użyj layoutu aplikacji

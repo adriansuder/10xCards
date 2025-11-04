@@ -6,7 +6,7 @@ export const prerender = false;
 
 export async function GET(context: APIContext): Promise<Response> {
   const { supabase, session } = context.locals;
-
+console.log('context.locals', context.locals);
   if (!session?.user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }

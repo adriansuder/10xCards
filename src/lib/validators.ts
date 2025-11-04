@@ -46,7 +46,7 @@ export const updateProfileSchema = z.object({
 const flashcardImportItemSchema = z.object({
   front: z.string().min(1, 'Front is required'),
   back: z.string().min(1, 'Back is required'),
-  part_of_speech: z.string().optional(),
+  part_of_speech: z.string().nullable().optional(),
 });
 
 const importMetricsSchema = z.object({

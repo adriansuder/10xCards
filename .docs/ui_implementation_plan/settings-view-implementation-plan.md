@@ -54,7 +54,7 @@ SettingsPage (Astro)
   const { supabase, user } = Astro.locals;
   
   if (!user) {
-    return Astro.redirect('/login');
+    return Astro.redirect('/logowanie');
   }
   
   // Pobranie profilu użytkownika
@@ -417,7 +417,7 @@ try {
       throw new Error('Nieprawidłowa wartość poziomu.');
     } else if (response.status === 401) {
       // Przekierowanie na login
-      window.location.href = '/login';
+      window.location.href = '/logowanie';
       return;
     } else {
       throw new Error('Nie udało się zapisać zmian.');
@@ -456,7 +456,7 @@ try {
 3. Dodać sprawdzenie uwierzytelnienia:
    ```typescript
    const { user, supabase } = Astro.locals;
-   if (!user) return Astro.redirect('/login');
+   if (!user) return Astro.redirect('/logowanie');
    ```
 4. Pobrać profil użytkownika z API `GET /api/profile`
 5. Obsłużyć potencjalne błędy (401, 404, 500)

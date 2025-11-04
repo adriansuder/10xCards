@@ -61,7 +61,7 @@ export const useFlashcards = (initialPage: number = 1) => {
       if (!response.ok) {
         if (response.status === 401) {
           // Redirect to login if unauthorized
-          window.location.href = '/login';
+          window.location.href = '/logowanie';
           return;
         }
         throw new Error(`Failed to fetch flashcards: ${response.statusText}`);
@@ -102,7 +102,7 @@ export const useFlashcards = (initialPage: number = 1) => {
 
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login';
+            window.location.href = '/logowanie';
             return;
           }
           if (response.status === 404) {
@@ -143,7 +143,7 @@ export const useFlashcards = (initialPage: number = 1) => {
 
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login';
+            window.location.href = '/logowanie';
             return;
           }
           if (response.status === 404) {

@@ -1,6 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '../../db/supabase.client';
 import type { ReviewCardDto, UpdateCardReviewDto } from '../../types';
-import type { Database } from '../../db/database.types';
 import { z } from 'zod';
 
 export const GetReviewSessionCommandSchema = z.object({
@@ -15,7 +14,7 @@ export interface UpdateCardReviewCommand extends UpdateCardReviewDto {
 }
 
 export class ReviewService {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  constructor(private supabase: SupabaseClient) {}
 
   /**
    * Retrieves flashcards due for review for a given user.

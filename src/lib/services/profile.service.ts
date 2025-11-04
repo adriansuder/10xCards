@@ -1,5 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../../db/database.types';
+import type { SupabaseClient } from '../../db/supabase.client';
 import type { UpdateProfileCommand, UserProfileDto } from '../../types';
 
 /**
@@ -13,7 +12,7 @@ export class ProfileService {
    * @returns A promise that resolves to the user's profile DTO.
    * @throws Will throw an error if the profile is not found or if a database error occurs.
    */
-  async getUserProfile(supabase: SupabaseClient<Database>, userId: string): Promise<UserProfileDto> {
+  async getUserProfile(supabase: SupabaseClient, userId: string): Promise<UserProfileDto> {
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('*')
@@ -45,7 +44,7 @@ export class ProfileService {
    * @returns A promise that resolves to the updated user profile DTO.
    * @throws Will throw an error if the profile is not found or if a database error occurs.
    */
-  async updateProfile(supabase: SupabaseClient<Database>, command: UpdateProfileCommand): Promise<UserProfileDto> {
+  async updateProfile(supabase: SupabaseClient, command: UpdateProfileCommand): Promise<UserProfileDto> {
     const { userId, default_ai_level } = command;
 
     const { data: updatedProfile, error } = await supabase
@@ -81,7 +80,7 @@ export class ProfileService {
  * @returns A promise that resolves to the user's profile DTO, or null if no user is authenticated.
  * @throws Will throw an error if the database operation fails.
  */
-export async function getProfile(supabase: SupabaseClient<Database>): Promise<UserProfileDto | null> {
+export async function getProfile(supabase: SupabaseClient): Promise<UserProfileDto | null> {
   const {
     data: { user },
   } = await supabase.auth.getUser();

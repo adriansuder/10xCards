@@ -1,10 +1,68 @@
 import type { APIRoute } from 'astro';
 import { CreateFlashcardSchema } from '../../../lib/validators';
-import type { CreateFlashcardCommand } from '../../../types';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../../../db/database.types';
+import type { CreateFlashcardCommand, FlashcardListQueryParams } from '../../../types';
+import { flashcardService, type GetFlashcardsOptions } from '../../../lib/services/flashcard.service';
 
 export const prerender = false;
+
+/**
+ * API endpoint to get paginated list of flashcards.
+ * It handles GET requests with query parameters for pagination and sorting.
+ * @returns {Response} A response object with flashcards list and pagination info.
+ */
+export const GET: APIRoute = async (context) => {
+  const { session, supabase } = context.locals;
+
+  // 1. Authentication: Ensure user is logged in
+  if (!session?.user) {
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  try {
+    // 2. Parse query parameters
+    const url = new URL(context.request.url);
+    const page = parseInt(url.searchParams.get('page') || '1', 10);
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
+    const sortBy = (url.searchParams.get('sortBy') || 'created_at') as 'created_at' | 'front' | 'leitner_box';
+    const order = (url.searchParams.get('order') || 'desc') as 'asc' | 'desc';
+
+    // 3. Validate parameters
+    if (page < 1 || pageSize < 1 || pageSize > 100) {
+      return new Response(
+        JSON.stringify({ message: 'Invalid pagination parameters' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const options: GetFlashcardsOptions = {
+      page,
+      pageSize,
+      sortBy,
+      order,
+    };
+
+    // 4. Service Call: Get flashcards from the database
+    const result = await flashcardService.getFlashcards(supabase, session.user.id, options);
+
+    // 5. Response: Return the flashcards list
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error fetching flashcards:', error);
+    return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};
 
 /**
  * API endpoint to create a new flashcard.
@@ -35,7 +93,7 @@ export const POST: APIRoute = async (context) => {
     }
 
     // 3. Service Call: Create the flashcard in the database
-    const newFlashcard = await createFlashcard(session.user.id, validation.data, supabase);
+    const newFlashcard = await flashcardService.createFlashcard(supabase, session.user.id, validation.data);
 
     // 4. Response: Return the newly created flashcard
     return new Response(JSON.stringify(newFlashcard), {
@@ -59,7 +117,3 @@ export const POST: APIRoute = async (context) => {
     });
   }
 };
-function createFlashcard(id: string, data: { back: string; front: string; part_of_speech?: string | undefined; }, supabase: SupabaseClient<Database, "public", "public", { Tables: { ai_generation_logs: { Row: { created_at: string; generated_count: number; id: string; imported_count: number; user_id: string; }; Insert: { created_at?: string; generated_count: number; id?: string; imported_count: number; user_id: string; }; Update: { created_at?: string; generated_count?: number; id?: string; imported_count?: number; user_id?: string; }; Relationships: []; }; flashcards: { Row: { ai_generated: boolean; back: string; created_at: string; flashcard_language_level: Database["public"]["Enums"]["language_level"] | null; front: string; id: string; leitner_box: number; part_of_speech: string | null; review_due_at: string; updated_at: string; user_id: string; }; Insert: { ai_generated?: boolean; back: string; created_at?: string; flashcard_language_level?: Database["public"]["Enums"]["language_level"] | null; front: string; id?: string; leitner_box?: number; part_of_speech?: string | null; review_due_at?: string; updated_at?: string; user_id: string; }; Update: { ai_generated?: boolean; back?: string; created_at?: string; flashcard_language_level?: Database["public"]["Enums"]["language_level"] | null; front?: string; id?: string; leitner_box?: number; part_of_speech?: string | null; review_due_at?: string; updated_at?: string; user_id?: string; }; Relationships: []; }; profiles: { Row: { created_at: string; default_ai_level: string; id: string; updated_at: string; }; Insert: { created_at?: string; default_ai_level?: string; id: string; updated_at?: string; }; Update: { created_at?: string; default_ai_level?: string; id?: string; updated_at?: string; }; Relationships: []; }; }; Views: { [_ in never]: never; }; Functions: { update_flashcard_review: { Args: { p_flashcard_id: string; p_knew_it: boolean; }; Returns: undefined; }; }; Enums: { language_level: "a1" | "a2" | "b1" | "b2" | "c1" | "c2"; }; CompositeTypes: { [_ in never]: never; }; }, { PostgrestVersion: "12"; }>) {
-  throw new Error('Function not implemented.');
-}
-

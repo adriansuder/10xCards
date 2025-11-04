@@ -5,13 +5,8 @@ import type { UserProfileDto } from '../types';
 
 export const prerender = false;
 
-// Auth check - redirect to login if not authenticated
-// @ts-ignore - Astro types not properly merged
-// const { user } = Astro.locals;
-
-// if (!user) {
-//   return Astro.redirect('/logowanie');
-// }
+// Note: Authentication is handled by middleware
+// Middleware will redirect unauthenticated users to /logowanie
 
 // Fetch user profile from API
 let profile: UserProfileDto | null = null;
@@ -26,9 +21,9 @@ try {
 
   if (!response.ok) {
     if (response.status === 401) {
-      return Astro.redirect('/logowanie');
-    }
-    if (response.status === 404) {
+      // Authentication failed - this shouldn't happen as middleware handles auth
+      error = 'Sesja wygasła. Odśwież stronę.';
+    } else if (response.status === 404) {
       error = 'Nie znaleziono profilu użytkownika.';
     } else {
       error = 'Wystąpił błąd podczas pobierania profilu.';

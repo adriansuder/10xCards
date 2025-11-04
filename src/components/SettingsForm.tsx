@@ -50,6 +50,11 @@ const SettingsForm: React.FC<SettingsFormProps> = React.memo(({ initialProfile }
     if (newLevel === selectedLevel) {
       return;
     }
+
+    // Guard clause: Already loading
+    if (isLoading) {
+      return;
+    }
     
     // Store previous value for rollback on error
     const previousLevel = selectedLevel;

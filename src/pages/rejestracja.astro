@@ -3,6 +3,9 @@ import RegisterForm from '../components/RegisterForm';
 import '../styles/globals.css';
 
 export const prerender = false;
+
+// Note: Authentication and redirects are handled by middleware
+// No need to check user here - middleware will redirect logged-in users to home
 ---
 
 <html lang="pl">
