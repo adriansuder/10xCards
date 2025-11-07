@@ -136,7 +136,8 @@ export function SuggestionItem({ suggestion, onUpdate, onRemove }: SuggestionIte
           </Label>
           <Select
             id={`pos-${suggestion.id}`}
-            value={suggestion.tempPartOfSpeech || ''}
+            // Prefer the editable temporary value when present, otherwise fall back to the saved value.
+            value={(suggestion.tempPartOfSpeech ?? suggestion.part_of_speech ?? '') as string}
             onChange={handlePartOfSpeechChange}
             aria-label="Wybierz część mowy"
           >
