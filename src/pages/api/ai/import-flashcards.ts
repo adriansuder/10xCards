@@ -7,9 +7,11 @@ import { getProfile } from '../../../lib/services/profile.service';
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { user, supabase } = locals;
+  const { supabase } = locals;
 
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 

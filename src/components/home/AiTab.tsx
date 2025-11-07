@@ -9,6 +9,7 @@ import { useAiGeneration } from '../hooks/useAiGeneration';
 import type { LanguageLevel } from '../../types';
 
 interface AiTabProps {
+  defaultAiLevel?: string | null;
   onImportSuccess: (count: number) => void;
   onError: (message: string) => void;
 }
@@ -17,9 +18,17 @@ interface AiTabProps {
  * Tab component for AI-powered flashcard generation.
  * Allows users to input text and generate flashcard suggestions using AI.
  */
-export function AiTab({ onImportSuccess, onError }: AiTabProps) {
+export function AiTab({ defaultAiLevel, onImportSuccess, onError }: AiTabProps) {
+  // Initialize level with user's default setting or fallback to 'b2'
+  const getInitialLevel = (): LanguageLevel => {
+    if (defaultAiLevel && ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'].includes(defaultAiLevel)) {
+      return defaultAiLevel as LanguageLevel;
+    }
+    return 'b2'; // Default fallback
+  };
+
   const [text, setText] = useState('');
-  const [level, setLevel] = useState<Extract<LanguageLevel, 'b1' | 'b2' | 'c1'>>('b2');
+  const [level, setLevel] = useState<LanguageLevel>(getInitialLevel());
   const errorShownRef = useRef<string | null>(null);
   
   const {
@@ -52,7 +61,25 @@ export function AiTab({ onImportSuccess, onError }: AiTabProps) {
       return;
     }
 
-    await generate({ text: text.trim(), level });
+    // Map selected level to supported AI generation levels (B1, B2, C1)
+    const mapToSupportedLevel = (selectedLevel: LanguageLevel): Extract<LanguageLevel, 'b1' | 'b2' | 'c1'> => {
+      switch (selectedLevel) {
+        case 'a1':
+        case 'a2':
+          return 'b1'; // Lower levels use B1
+        case 'b1':
+          return 'b1';
+        case 'b2':
+          return 'b2';
+        case 'c1':
+        case 'c2':
+          return 'c1'; // Higher levels use C1
+        default:
+          return 'b2';
+      }
+    };
+
+    await generate({ text: text.trim(), level: mapToSupportedLevel(level) });
   };
 
   const handleImport = async () => {
@@ -112,10 +139,10 @@ export function AiTab({ onImportSuccess, onError }: AiTabProps) {
           </Label>
           <Select
             id="ai-level"
-            value={level}
-            onChange={(e) => setLevel(e.target.value as Extract<LanguageLevel, 'b1' | 'b2' | 'c1'>)}
+            value={level} 
+            onChange={(e) => setLevel(e.target.value as LanguageLevel)}
             disabled={isGenerating}
-          > 
+          >
             <option value="a1">A1 - Początkujący</option>
             <option value="a2">A2 - Podstawowy</option>
             <option value="b1">B1 - Średnio zaawansowany niższy</option>

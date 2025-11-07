@@ -10,9 +10,11 @@ const GetReviewSessionParamsSchema = z.object({
 });
 
 export const GET: APIRoute = async ({ locals, url }) => {
-  const { user, supabase } = locals;
+  const { supabase } = locals;
 
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 

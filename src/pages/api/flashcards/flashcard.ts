@@ -5,9 +5,11 @@ import { GetFlashcardParamsSchema, UpdateFlashcardSchema } from '../../../lib/va
 export const prerender = false;
 
 export async function GET(context: APIContext): Promise<Response> {
-  const { supabase, session } = context.locals;
-console.log('context.locals', context.locals);
-  if (!session?.user) {
+  const { supabase } = context.locals;
+
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 
@@ -55,10 +57,11 @@ console.log('context.locals', context.locals);
  * @returns Response with updated flashcard or error message
  */
 export async function PATCH(context: APIContext): Promise<Response> {
-  const { supabase, session } = context.locals;
+  const { supabase } = context.locals;
 
-  // Guard clause: Check authentication
-  if (!session?.user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { 
       status: 401,
       headers: { 'Content-Type': 'application/json' }
@@ -130,7 +133,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
     const updatedFlashcard = await flashcardService.updateFlashcard(
       supabase,
       flashcardId,
-      session.user.id,
+      user.id,
       bodyValidation.data
     );
 

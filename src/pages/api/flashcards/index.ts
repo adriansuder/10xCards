@@ -11,10 +11,11 @@ export const prerender = false;
  * @returns {Response} A response object with flashcards list and pagination info.
  */
 export const GET: APIRoute = async (context) => {
-  const { session, supabase } = context.locals;
+  const { supabase } = context.locals;
 
-  // 1. Authentication: Ensure user is logged in
-  if (!session?.user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
@@ -48,7 +49,7 @@ export const GET: APIRoute = async (context) => {
     };
 
     // 4. Service Call: Get flashcards from the database
-    const result = await flashcardService.getFlashcards(supabase, session.user.id, options);
+    const result = await flashcardService.getFlashcards(supabase, user.id, options);
 
     // 5. Response: Return the flashcards list
     return new Response(JSON.stringify(result), {
@@ -70,10 +71,11 @@ export const GET: APIRoute = async (context) => {
  * @returns {Response} A response object with the new flashcard data or an error message.
  */
 export const POST: APIRoute = async (context) => {
-  const { session, supabase } = context.locals;
+  const { supabase } = context.locals;
 
-  // 1. Authentication: Ensure user is logged in
-  if (!session?.user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
@@ -93,7 +95,7 @@ export const POST: APIRoute = async (context) => {
     }
 
     // 3. Service Call: Create the flashcard in the database
-    const newFlashcard = await flashcardService.createFlashcard(supabase, session.user.id, validation.data);
+    const newFlashcard = await flashcardService.createFlashcard(supabase, user.id, validation.data);
 
     // 4. Response: Return the newly created flashcard
     return new Response(JSON.stringify(newFlashcard), {

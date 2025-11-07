@@ -92,11 +92,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   // Check if email confirmation is required
-  // When enable_confirmations is true in Supabase config, user needs to verify email
+  // When enable_confirmations is true in Supabase config:
+  // - data.session will be null (user not logged in yet)
+  // - user.email_confirmed_at will be null (email not confirmed)
+  // When enable_confirmations is false:
+  // - data.session will exist (user auto-logged in)
+  // - user.email_confirmed_at will have timestamp (auto-confirmed)
   const requiresEmailConfirmation = !data.session;
 
-  // Success - cookies are automatically set by Supabase server client
-  // User is now logged in (US-001 AC-4) - unless email confirmation is required
+  // Success response
+  // Note: If email confirmation is required, cookies are NOT set (no session)
+  // If email confirmation is disabled, cookies are automatically set by Supabase
   return new Response(
     JSON.stringify({ 
       user: data.user,

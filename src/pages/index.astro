@@ -2,12 +2,34 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import { HomePage } from '../components/home/HomePage';
 import { Toaster } from '../components/ui/sonner';
+import type { UserProfileDto } from '../types';
+
+export const prerender = false;
 
 // Note: Authentication is handled by middleware
 // Middleware will redirect unauthenticated users to /logowanie
 const user = Astro.locals.user;
+
+// Fetch user profile to get default AI level
+let defaultAiLevel: string | null = null;
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/profile`, {
+    headers: {
+      'Cookie': Astro.request.headers.get('Cookie') || '',
+    },
+  });
+
+  if (response.ok) {
+    const profile: UserProfileDto = await response.json();
+    defaultAiLevel = profile.default_ai_level;
+  }
+} catch (err) {
+  console.error('Error fetching profile for default AI level:', err);
+  // Fail silently - will use component default
+}
 ---
 
 <MainLayout title="Utwórz fiszki - 10xCards">
-  <HomePage client:load />
+  <HomePage client:load defaultAiLevel={defaultAiLevel} />
 </MainLayout>

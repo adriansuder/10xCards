@@ -44,7 +44,7 @@ const {
               </a>
               <button 
                 onclick="handleLogout()"
-                class="text-sm font-medium hover:text-primary transition-colors"
+                class="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
               >
                 Wyloguj
               </button>
@@ -67,7 +67,7 @@ const {
     <Toaster client:load />
 
     <script>
-      async function handleLogout() {
+      (window as any).handleLogout = async function() {
         try {
           const response = await fetch('/api/auth/logout', {
             method: 'POST',

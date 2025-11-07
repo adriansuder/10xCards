@@ -12,9 +12,11 @@ const GenerateSuggestionsPayloadSchema = z.object({
 });
 
 export const POST: APIRoute = async (context) => {
-  const { user } = context.locals;
+  const { supabase } = context.locals;
 
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response('Unauthorized', { status: 401 });
   }
 

@@ -4,10 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { AiTab } from './AiTab';
 import { ManualTab } from './ManualTab';
 
+interface HomePageProps {
+  defaultAiLevel?: string | null;
+}
+
 /**
  * Main home page component containing AI and Manual tabs for flashcard creation.
  */
-export function HomePage() {
+export function HomePage({ defaultAiLevel }: HomePageProps) {
   const [activeTab, setActiveTab] = useState<'ai' | 'manual'>('ai');
 
   const handleAiImportSuccess = useCallback((count: number) => {
@@ -51,6 +55,7 @@ export function HomePage() {
 
           <TabsContent value="ai" className="mt-6">
             <AiTab
+              defaultAiLevel={defaultAiLevel}
               onImportSuccess={handleAiImportSuccess}
               onError={handleError}
             />

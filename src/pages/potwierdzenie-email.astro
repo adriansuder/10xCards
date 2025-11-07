@@ -1,0 +1,118 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+export const prerender = false;
+
+// This page handles the email confirmation callback from Supabase
+// URL format: /potwierdzenie-email?token_hash=xxx&type=email
+const url = new URL(Astro.request.url);
+const tokenHash = url.searchParams.get('token_hash');
+const type = url.searchParams.get('type');
+
+let success = false;
+let error: string | null = null;
+let isProcessing = true;
+
+// Only process if we have the required parameters
+if (tokenHash && type === 'email') {
+  try {
+    const { supabase } = Astro.locals;
+    
+    // Verify the email with the token
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: 'email',
+    });
+
+    if (verifyError) {
+      console.error('Email verification error:', verifyError);
+      error = 'Link potwierdzający jest nieprawidłowy lub wygasł.';
+    } else {
+      success = true;
+    }
+  } catch (err) {
+    console.error('Unexpected error during email confirmation:', err);
+    error = 'Wystąpił nieoczekiwany błąd podczas potwierdzania email.';
+  } finally {
+    isProcessing = false;
+  }
+} else {
+  isProcessing = false;
+  error = 'Nieprawidłowy link potwierdzający.';
+}
+---
+
+<MainLayout title="Potwierdzenie email - 10xCards" description="Potwierdź swój adres email">
+  <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div class="max-w-md w-full">
+      {isProcessing ? (
+        <!-- Processing state -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div class="mb-4">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">
+            Potwierdzanie email...
+          </h1>
+          <p class="text-gray-600">
+            Proszę czekać, trwa weryfikacja Twojego adresu email.
+          </p>
+        </div>
+      ) : success ? (
+        <!-- Success state -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div class="mb-4">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">
+            Email potwierdzony!
+          </h1>
+          <p class="text-gray-600 mb-6">
+            Twoje konto zostało aktywowane. Możesz się teraz zalogować.
+          </p>
+          <a 
+            href="/logowanie" 
+            class="inline-block w-full px-6 py-3 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Przejdź do logowania
+          </a>
+        </div>
+      ) : (
+        <!-- Error state -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div class="mb-4">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
+              <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">
+            Błąd potwierdzenia
+          </h1>
+          <p class="text-gray-600 mb-6">
+            {error}
+          </p>
+          <div class="space-y-3">
+            <a 
+              href="/rejestracja" 
+              class="block w-full px-6 py-3 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Zarejestruj się ponownie
+            </a>
+            <a 
+              href="/logowanie" 
+              class="block w-full px-6 py-3 text-base font-medium text-indigo-600 bg-white hover:bg-gray-50 border border-indigo-600 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Wróć do logowania
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</MainLayout>

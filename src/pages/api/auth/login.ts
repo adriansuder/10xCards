@@ -70,17 +70,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
     
     // Map Supabase errors to user-friendly messages
     let errorMessage = 'Wystąpił błąd podczas logowania.';
+    let errorCode = 'GENERIC_ERROR';
     
     if (error.message === 'Invalid login credentials') {
       errorMessage = 'Nieprawidłowy email lub hasło.';
+      errorCode = 'INVALID_CREDENTIALS';
     } else if (error.message === 'Email not confirmed') {
-      errorMessage = 'Konto nie zostało aktywowane. Sprawdź swoją skrzynkę email.';
+      errorMessage = 'Konto nie zostało aktywowane. Sprawdź swoją skrzynkę email i kliknij w link potwierdzający.';
+      errorCode = 'EMAIL_NOT_CONFIRMED';
     } else if (error.message.includes('Too many requests')) {
       errorMessage = 'Zbyt wiele prób logowania. Spróbuj ponownie za kilka minut.';
+      errorCode = 'TOO_MANY_REQUESTS';
     }
 
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ 
+        error: errorMessage,
+        code: errorCode 
+      }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }

@@ -6,9 +6,11 @@ import type { UpdateProfileCommand, UpdateProfileDto } from '../../types';
 export const prerender = false;
 
 export const GET: APIRoute = async ({ locals }) => {
-  const { supabase, user } = locals;
+  const { supabase } = locals;
 
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -46,10 +48,11 @@ export const GET: APIRoute = async ({ locals }) => {
  * @returns Response with updated profile or error message
  */
 export const PATCH: APIRoute = async ({ locals, request }) => {
-  const { supabase, user } = locals;
+  const { supabase } = locals;
 
-  // Guard clause: Check authentication
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { 
       status: 401,
       headers: { 'Content-Type': 'application/json' }

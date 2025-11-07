@@ -5,10 +5,11 @@ import { updateCardReviewSchema } from '../../../lib/validators';
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { user, supabase } = locals;
+  const { supabase } = locals;
 
-  // Guard: Check if user is authenticated
-  if (!user) {
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },

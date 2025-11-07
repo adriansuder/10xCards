@@ -10,6 +10,7 @@ const PUBLIC_PATHS = [
   '/rejestracja',
   '/api/auth/login',
   '/api/auth/register',
+  '/api/auth/logout',
 ];
 
 /**
@@ -66,10 +67,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // This also refreshes the session if needed and updates cookies
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
-
-  // Debug logging (remove in production)
-  console.log(`[Middleware] Path: ${pathname}, User: ${user ? user.email : 'none'}`);
 
   // Store user and session in context.locals
   if (user) {
