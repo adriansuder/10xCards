@@ -38,7 +38,7 @@ export function useAiGeneration(): UseAiGenerationReturn {
     isEditing: false,
     tempFront: suggestion.front,
     tempBack: suggestion.back,
-    tempPartOfSpeech: null,
+    tempPartOfSpeech: suggestion.part_of_speech,
   });
 
   /**
@@ -102,7 +102,7 @@ export function useAiGeneration(): UseAiGenerationReturn {
       const flashcardsToImport = suggestions.map(s => ({
         front: s.front,
         back: s.back,
-        part_of_speech: s.tempPartOfSpeech || null,
+        part_of_speech: s.tempPartOfSpeech,
       }));
 
       const command: ImportFlashcardsCommand = {
