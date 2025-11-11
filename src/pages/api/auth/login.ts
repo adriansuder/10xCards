@@ -34,6 +34,8 @@ const loginSchema = z.object({
 export const POST: APIRoute = async ({ request, locals }) => {
   const { supabase } = locals;
 
+  console.log('[API] Login attempt started');
+
   // Parse and validate request body
   let body;
   try {
@@ -59,6 +61,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const { email, password } = validation.data;
 
+  console.log(`[API] Attempting login for email: ${email}`);
+
   // Attempt to sign in with Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -66,7 +70,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   });
 
   if (error) {
-    console.error('Login error:', error);
+    console.error('[API] Login error:', error);
     
     // Map Supabase errors to user-friendly messages
     let errorMessage = 'Wystąpił błąd podczas logowania.';
@@ -83,6 +87,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       errorCode = 'TOO_MANY_REQUESTS';
     }
 
+    console.error(`[API] Login failed with code ${errorCode}: ${errorMessage}`);
     return new Response(
       JSON.stringify({ 
         error: errorMessage,
@@ -92,6 +97,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 
+  console.log(`[API] Login successful for user: ${data.user?.email}`);
   // Success - cookies are automatically set by Supabase server client
   return new Response(
     JSON.stringify({ user: data.user }),

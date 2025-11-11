@@ -165,4 +165,33 @@ export const flashcardService = {
 
     return updatedFlashcard;
   },
+
+  /**
+   * Deletes a flashcard for the authenticated user.
+   * Uses RLS policies to ensure users can only delete their own flashcards.
+   * 
+   * @param supabase - Supabase client instance
+   * @param flashcardId - UUID of the flashcard to delete
+   * @param userId - ID of the authenticated user
+   * @returns True if deleted, false if not found
+   * @throws Error if database operation fails
+   */
+  async deleteFlashcard(
+    supabase: SupabaseClient,
+    flashcardId: string,
+    userId: string
+  ): Promise<boolean> {
+    const { error } = await supabase
+      .from('flashcards')
+      .delete()
+      .eq('id', flashcardId)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error deleting flashcard in database:', error);
+      throw new Error('Database operation failed.');
+    }
+
+    return true;
+  },
 };

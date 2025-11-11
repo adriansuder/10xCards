@@ -3,11 +3,17 @@ import { createBrowserClient, createServerClient, type CookieOptionsWithName } f
 import type { Session, User } from '@supabase/supabase-js';
 import type { Database } from './database.types';
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// Prefer runtime process.env values (set by dotenv/dev script) and fall back to import.meta.env
+const supabaseUrl = process.env.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.PUBLIC_SUPABASE_ANON_KEY || import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceRoleKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_SERVICE_KEY ||
+  import.meta.env.SUPABASE_SERVICE_ROLE_KEY ||
+  import.meta.env.SUPABASE_SERVICE_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+  throw new Error('Missing Supabase public environment variables. Please check your .env file.');
 }
 
 /**
@@ -58,9 +64,22 @@ export const createSupabaseServerInstance = (context: {
   headers: Headers;
   cookies: AstroCookies;
 }) => {
+  // Use service role key on the server when available, otherwise fall back to anon key
+  const serverKey = supabaseServiceRoleKey || supabaseAnonKey;
+
+  // Log which key type is being used for server requests to help debugging in dev
+  try {
+    const keyType = supabaseServiceRoleKey ? 'service_role' : 'anon';
+    // Partially mask key in logs
+    const maskedKey = serverKey ? `${serverKey.slice(0, 6)}...${serverKey.slice(-4)}` : 'undefined';
+    console.log(`[Supabase] Using ${keyType} key for server client: ${maskedKey}`);
+  } catch (e) {
+    // ignore logging errors
+  }
+
   return createServerClient<Database>(
     supabaseUrl,
-    supabaseAnonKey,
+    serverKey,
     {
       cookieOptions,
       cookies: {

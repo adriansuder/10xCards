@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 import type {
   FlashcardTableViewModel,
   ListFlashcardsResponseDto,
@@ -154,6 +155,7 @@ export const useFlashcards = (initialPage: number = 1) => {
 
         // Refresh to get updated pagination
         await fetchFlashcards(viewModel.pagination.currentPage);
+        toast.success('Fiszka została usunięta');
       } catch (error) {
         // Rollback optimistic update on error
         setViewModel((prev: FlashcardTableViewModel) => ({

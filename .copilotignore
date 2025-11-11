@@ -1,0 +1,99 @@
+# Copilot Ignore File
+# Files and directories listed here will be excluded from GitHub Copilot context
+
+# Dependencies
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+
+# Build outputs
+dist/
+build/
+.astro/
+.output/
+.vercel/
+.netlify/
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Cache directories
+.cache/
+.temp/
+.tmp/
+*.cache
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+*.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Database files
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+
+# Test files (optional - uncomment if you want to exclude)
+# tests/
+# **/*.test.ts
+# **/*.spec.ts
+
+# Large data files
+*.csv
+*.xlsx
+*.xls
+*.pdf
+*.zip
+*.tar.gz
+
+# Lock files (optional - uncomment to exclude)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Documentation that doesn't need context (uncomment if needed)
+# CHANGELOG.md
+# LICENSE
+
+# Migration files (usually don't need in context)
+supabase/migrations/*.sql
+
+# Generated types (already in codebase)
+# src/db/database.types.ts
+
+
+.env.local
+.env.test
+.env

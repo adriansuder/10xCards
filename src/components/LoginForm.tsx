@@ -22,6 +22,8 @@ interface FieldErrors {
 }
 
 const LoginForm: React.FC = React.memo(() => {
+  console.log('[LoginForm] Component rendered');
+
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
@@ -66,12 +68,14 @@ const LoginForm: React.FC = React.memo(() => {
       }
     });
 
+    console.log('[LoginForm] Form validation result:', { isValid, errors, formData });
     setFieldErrors(errors);
     return isValid;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    console.log(`[LoginForm] handleChange: ${name} = "${value}"`);
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -94,15 +98,20 @@ const LoginForm: React.FC = React.memo(() => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log('[LoginForm] Form submit started');
+
     // Validate form before submission
     if (!validateForm()) {
+      console.log('[LoginForm] Form validation failed');
       return;
     }
 
+    console.log('[LoginForm] Form validation passed, starting login...');
     setIsLoading(true);
     setError(null);
 
     try {
+      console.log('[LoginForm] Calling /api/auth/login...');
       // Call our backend API endpoint instead of Supabase directly
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -115,17 +124,22 @@ const LoginForm: React.FC = React.memo(() => {
         }),
       });
 
+      console.log(`[LoginForm] API response status: ${response.status}`);
+
       const data = await response.json();
+      console.log('[LoginForm] API response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Wystąpił błąd podczas logowania.');
       }
 
+      console.log('[LoginForm] Login successful, redirecting...');
       // Success - redirect to home page
       // Server has already set the cookies, so just redirect
       window.location.href = '/';
     } catch (err: unknown) {
       const error = err as Error;
+      console.error('[LoginForm] Login failed:', error);
       setError({
         message: error.message || 'Wystąpił błąd podczas logowania.',
       });
@@ -209,6 +223,7 @@ const LoginForm: React.FC = React.memo(() => {
           type="submit"
           onClick={handleSubmit}
           disabled={isLoading}
+          data-test-id="login-submit-button"
           className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (

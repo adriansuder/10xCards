@@ -4,12 +4,20 @@ Aplikacja do nauki języków z wykorzystaniem fiszek i algorytmu Leitnera, z mo�
 
 ## Tech Stack
 
+### Frontend & Backend
 - [Astro](https://astro.build/) v5.14.8 - Modern web framework for building fast websites
 - [React](https://react.dev/) v19.2.0 - UI library for interactive components
 - [TypeScript](https://www.typescriptlang.org/) v5.9.3 - Type-safe JavaScript
 - [Tailwind CSS](https://tailwindcss.com/) v3.4.18 - Utility-first CSS framework
 - [Supabase](https://supabase.com/) v2.76.1 - Backend as a Service (Database, Auth)
 - [Shadcn/ui](https://ui.shadcn.com/) - UI component library
+
+### Testing
+- [Vitest](https://vitest.dev/) v2.0+ - Unit and integration testing framework (native ESM support)
+- [Playwright](https://playwright.dev/) v1.47+ - End-to-end testing framework
+- [@testing-library/react](https://testing-library.com/react) v16.0+ - React component testing utilities
+- [axe-core](https://github.com/dequelabs/axe-core) - Accessibility testing
+- [k6](https://k6.io/) - Performance and load testing
 
 ## Prerequisites
 
@@ -115,6 +123,38 @@ PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 - ⚙️ **User Settings** - Customize AI difficulty level and preferences
 - 📱 **Responsive Design** - Works on mobile, tablet, and desktop
 - ♿ **Accessible** - ARIA labels, keyboard navigation, screen reader support
+
+## Testing
+
+This project includes comprehensive testing infrastructure:
+
+### Running Tests
+
+```bash
+# Run unit tests
+npm run test:unit
+
+# Run integration tests
+npm run test:integration
+
+# Run E2E tests
+npm run test:e2e
+
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Test Structure
+
+- `tests/unit/` - Unit tests for services, hooks, and utilities
+- `tests/integration/` - API endpoint and database tests
+- `tests/e2e/` - End-to-end user journey tests
+- `tests/fixtures/` - Test data and mocks
+
+For detailed testing guidelines, see [`.docs/test-plan.md`](.docs/test-plan.md).
 
 ## Development
 

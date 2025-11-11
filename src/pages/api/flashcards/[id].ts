@@ -26,7 +26,7 @@ export async function GET(context: APIContext): Promise<Response> {
     );
   }
 
-  const { flashcardId } = validationResult.data;
+  const { id: flashcardId } = validationResult.data;
 
   try {
     const flashcard = await flashcardService.getFlashcardById(supabase, flashcardId);
@@ -85,7 +85,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
     );
   }
 
-  const { flashcardId } = paramsValidation.data;
+  const { id: flashcardId } = paramsValidation.data;
 
   // Parse and validate request body
   let requestBody;
@@ -155,6 +155,79 @@ export async function PATCH(context: APIContext): Promise<Response> {
     });
   } catch (error) {
     console.error('Error updating flashcard:', error);
+    return new Response(
+      JSON.stringify({ message: 'An internal server error occurred.' }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+}
+
+/**
+ * DELETE endpoint to delete an existing flashcard.
+ * 
+ * @param context - Astro API context with locals (supabase, session), params, and request
+ * @returns Response with success message or error message
+ */
+export async function DELETE(context: APIContext): Promise<Response> {
+  const { supabase } = context.locals;
+
+  // 1. Authentication: Get current user session
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), { 
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // Validate flashcard ID from URL params
+  const params = context.params;
+  const paramsValidation = GetFlashcardParamsSchema.safeParse(params);
+  
+  if (!paramsValidation.success) {
+    return new Response(
+      JSON.stringify({
+        message: 'Invalid flashcard ID.',
+        errors: paramsValidation.error.flatten().fieldErrors,
+      }),
+      { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+
+  const { id: flashcardId } = paramsValidation.data;
+
+  try {
+    // Delete flashcard through service
+    const deleted = await flashcardService.deleteFlashcard(
+      supabase,
+      flashcardId,
+      user.id
+    );
+
+    // Guard clause: Check if flashcard was found and deleted
+    if (!deleted) {
+      return new Response(
+        JSON.stringify({ message: 'Flashcard not found or access denied.' }),
+        { 
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Happy path: Return success
+    return new Response(JSON.stringify({ message: 'Flashcard deleted successfully.' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error deleting flashcard:', error);
     return new Response(
       JSON.stringify({ message: 'An internal server error occurred.' }),
       { 

@@ -13,10 +13,10 @@ export const CreateFlashcardSchema = z.object({
 
 /**
  * Schema for validating the flashcard ID from the URL path.
- * Ensures that 'flashcardId' is a valid UUID.
+ * Ensures that 'id' is a valid UUID.
  */
 export const GetFlashcardParamsSchema = z.object({
-  flashcardId: z.string().uuid({ message: 'Flashcard ID must be a valid UUID.' }),
+  id: z.string().uuid({ message: 'Flashcard ID must be a valid UUID.' }),
 });
 
 /**

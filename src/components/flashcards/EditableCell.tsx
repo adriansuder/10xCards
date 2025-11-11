@@ -3,6 +3,7 @@ import { Check, X } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { TableCell } from '../ui/table';
+import { toast } from 'sonner';
 import type { EditableCellProps, EditableCellState } from '../../types';
 
 /**
@@ -108,6 +109,7 @@ export function EditableCell({ value, fieldName, onSave, isEditable = true }: Ed
         isSaving: false,
         error: null,
       }));
+      toast.success('Fiszka została zaktualizowana');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Nie udało się zapisać zmian';
       setState((prev) => ({
@@ -115,6 +117,7 @@ export function EditableCell({ value, fieldName, onSave, isEditable = true }: Ed
         isSaving: false,
         error: errorMessage,
       }));
+      toast.error('Wystąpił błąd');
     }
   };
 

@@ -65,6 +65,7 @@ export function DeleteButton({ flashcardId, onDelete, isDeleting = false }: Dele
             onClick={handleConfirm}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            data-test-id="confirm-delete-flashcard-button"
           >
             {isLoading ? 'Usuwanie...' : 'Usuń'}
           </AlertDialogAction>

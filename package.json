@@ -23,9 +23,32 @@
     "zod-to-json-schema": "^3.24.6"
   },
   "scripts": {
-    "dev": "astro dev"
+    "dev": "astro dev",
+    "test": "vitest run && playwright test",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:codegen": "playwright codegen http://localhost:4321",
+  "dev:e2e": "node ./scripts/dev-e2e.js"
   },
   "devDependencies": {
-    "@astrojs/ts-plugin": "^1.10.5"
+    "@astrojs/ts-plugin": "^1.10.5",
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
+    "dotenv": "^17.2.3",
+    "happy-dom": "^20.0.10",
+    "jsdom": "^27.1.0",
+    "playwright": "^1.56.1",
+    "vitest": "^4.0.8"
   }
 }
