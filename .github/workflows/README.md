@@ -37,12 +37,25 @@ Utwórz środowisko `integration` dla testów E2E (opcjonalnie możesz dodać pr
 ### Funkcjonalności
 
 - ✅ Automatyczne lintowanie kodu (Astro + TypeScript)
-- ✅ Testy jednostkowe z coverage
+- ✅ Testy jednostkowe z coverage (threshold: 40%)
 - ✅ Testy E2E z Playwright (tylko Chromium zgodnie z konfiguracją)
-- ✅ Upload coverage do Codecov
-- ✅ Upload artefaktów testowych
+- ✅ Upload coverage do Codecov w formacie LCOV (tylko testy jednostkowe)
+- ✅ Upload artefaktów testowych i raportów Playwright
 - ✅ Automatyczny komentarz w PR ze statusem wszystkich jobów
 - ✅ Używa najnowszych wersji akcji (sprawdzone: 2025-11-12)
+
+### Coverage
+
+- **Format**: LCOV (`coverage/lcov.info`)
+- **Provider**: Vitest v8
+- **Threshold**: 40% dla lines, functions, branches, statements
+- **Tylko testy jednostkowe** - Playwright nie generuje coverage natywnie
+
+### Uruchamiane testy E2E
+
+Wszystkie testy z katalogu `tests/e2e/*.spec.ts`:
+- `manual-flashcard-creation.spec.ts` - Tworzenie fiszek ręcznie
+- `user-journey.spec.ts` - Zarządzanie fiszkami, edycja inline, usuwanie, dostępność (WCAG 2.1 AA)
 
 ### Wykorzystane akcje
 

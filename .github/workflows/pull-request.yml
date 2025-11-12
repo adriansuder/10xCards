@@ -53,7 +53,7 @@ jobs:
       - name: Upload unit test coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: ./coverage/coverage-final.json
+          files: ./coverage/lcov.info
           flags: unit-tests
           name: unit-test-coverage
           fail_ci_if_error: false
@@ -88,7 +88,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
         
-      - name: Run E2E tests with coverage
+      - name: Run E2E tests
         run: npm run test:e2e
         env:
           PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL || secrets.PUBLIC_SUPABASE_URL }}
@@ -97,15 +97,6 @@ jobs:
           E2E_USERNAME_ID: ${{ vars.E2E_USERNAME_ID || secrets.E2E_USERNAME_ID }}
           E2E_USERNAME: ${{ vars.E2E_USERNAME || secrets.E2E_USERNAME }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
-        
-      - name: Upload E2E test coverage to Codecov
-        uses: codecov/codecov-action@v5
-        if: always()
-        with:
-          files: ./coverage/coverage-final.json
-          flags: e2e-tests
-          name: e2e-test-coverage
-          fail_ci_if_error: false
           
       - name: Upload E2E test results
         if: always()

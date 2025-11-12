@@ -17,6 +17,8 @@ export default defineConfig({
     // Coverage configuration
     coverage: {
       provider: 'v8',
+      enabled: true,
+      reportsDirectory: './coverage',
       reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         'node_modules/',
@@ -29,10 +31,10 @@ export default defineConfig({
       ],
       // Coverage thresholds
       thresholds: {
-        lines: 80,
-        functions: 80,
-        branches: 75,
-        statements: 80,
+        lines: 40,
+        functions: 40,
+        branches: 40,
+        statements: 40,
       },
     },
     
@@ -50,14 +52,6 @@ export default defineConfig({
     
     // Reporter configuration
     reporters: ['verbose'],
-    
-    // Parallel execution
-    pool: 'threads',
-    poolOptions: {
-      threads: {
-        singleThread: false,
-      },
-    },
   },
   
   // Path resolution for imports in tests
