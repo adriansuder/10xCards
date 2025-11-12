@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/cloudflare": "^12.6.10",
     "@astrojs/react": "^4.4.1",
     "@astrojs/tailwind": "^6.0.2",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -34,7 +35,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:codegen": "playwright codegen http://localhost:4321",
-  "dev:e2e": "node ./scripts/dev-e2e.js"
+    "build": "astro build",
+    "dev:e2e": "node ./scripts/dev-e2e.js"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.5",
