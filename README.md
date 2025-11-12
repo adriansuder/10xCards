@@ -1,4 +1,4 @@
-# 10xCards - Nauka języków z fiszkami
+# 10xCards - Nauka języków z fiszkami :)
 
 Aplikacja do nauki języków z wykorzystaniem fiszek i algorytmu Leitnera, z możliwością generowania fiszek przez AI.
 
