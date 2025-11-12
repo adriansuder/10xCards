@@ -35,12 +35,12 @@ export class OpenRouterService {
    */
   constructor() {
     // Prefer process.env for server-side environments like Cloudflare Pages
-    const apiKey = process.env.OPENROUTER_API_KEY || import.meta.env.OPENROUTER_API_KEY;
+    const apiKey = process.env.PUBLIC_OPENROUTER_API_KEY || import.meta.env.PUBLIC_OPENROUTER_API_KEY;
     
     if (!apiKey) {
       throw new Error(
-        'OPENROUTER_API_KEY is not set in environment variables. ' +
-        'Please configure this key in your .env file or Cloudflare settings.'
+        'PUBLIC_OPENROUTER_API_KEY is not set in environment variables. ' +
+        'Please configure this key in your .env file or Cloudflare/GitHub settings.'
       );
     }
     
