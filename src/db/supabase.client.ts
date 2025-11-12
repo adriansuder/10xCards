@@ -72,7 +72,6 @@ export const createSupabaseServerInstance = (context: {
     const keyType = supabaseServiceRoleKey ? 'service_role' : 'anon';
     // Partially mask key in logs
     const maskedKey = serverKey ? `${serverKey.slice(0, 6)}...${serverKey.slice(-4)}` : 'undefined';
-    console.log(`[Supabase] Using ${keyType} key for server client: ${maskedKey}`);
   } catch (e) {
     // ignore logging errors
   }

@@ -22,7 +22,6 @@ interface FieldErrors {
 }
 
 const LoginForm: React.FC = React.memo(() => {
-  console.log('[LoginForm] Component rendered');
 
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -68,14 +67,12 @@ const LoginForm: React.FC = React.memo(() => {
       }
     });
 
-    console.log('[LoginForm] Form validation result:', { isValid, errors, formData });
     setFieldErrors(errors);
     return isValid;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(`[LoginForm] handleChange: ${name} = "${value}"`);
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -98,20 +95,16 @@ const LoginForm: React.FC = React.memo(() => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('[LoginForm] Form submit started');
 
     // Validate form before submission
     if (!validateForm()) {
-      console.log('[LoginForm] Form validation failed');
       return;
     }
 
-    console.log('[LoginForm] Form validation passed, starting login...');
     setIsLoading(true);
     setError(null);
 
     try {
-      console.log('[LoginForm] Calling /api/auth/login...');
       // Call our backend API endpoint instead of Supabase directly
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -124,16 +117,13 @@ const LoginForm: React.FC = React.memo(() => {
         }),
       });
 
-      console.log(`[LoginForm] API response status: ${response.status}`);
 
       const data = await response.json();
-      console.log('[LoginForm] API response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Wystąpił błąd podczas logowania.');
       }
 
-      console.log('[LoginForm] Login successful, redirecting...');
       // Success - redirect to home page
       // Server has already set the cookies, so just redirect
       window.location.href = '/';

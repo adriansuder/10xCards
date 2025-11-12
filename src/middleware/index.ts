@@ -95,13 +95,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Redirect logged-in users away from auth pages
   if (user && isPublicPath) {
-    console.log(`[Middleware] Redirecting logged-in user from ${pathname} to /`);
     return context.redirect('/');
   }
 
   // Redirect logged-out users from protected pages to login
   if (!user && isProtectedPath) {
-    console.log(`[Middleware] Redirecting logged-out user from ${pathname} to /logowanie`);
     return context.redirect('/logowanie');
   }
 

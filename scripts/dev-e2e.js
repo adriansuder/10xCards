@@ -5,7 +5,6 @@ const { spawn } = require('child_process');
 const dotenv = require('dotenv');
 
 const envPath = path.resolve(process.cwd(), '.env.test');
-console.log(`Loading environment from ${envPath}`);
 const result = dotenv.config({ path: envPath });
 if (result.error) {
   console.warn('Could not load .env.test, falling back to existing environment:', result.error.message);

@@ -34,7 +34,6 @@ const loginSchema = z.object({
 export const POST: APIRoute = async ({ request, locals }) => {
   const { supabase } = locals;
 
-  console.log('[API] Login attempt started');
 
   // Parse and validate request body
   let body;
@@ -61,7 +60,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const { email, password } = validation.data;
 
-  console.log(`[API] Attempting login for email: ${email}`);
 
   // Attempt to sign in with Supabase
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -97,7 +95,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 
-  console.log(`[API] Login successful for user: ${data.user?.email}`);
   // Success - cookies are automatically set by Supabase server client
   return new Response(
     JSON.stringify({ user: data.user }),
